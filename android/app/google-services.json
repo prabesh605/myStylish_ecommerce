@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "205365347914",
+    "project_id": "teamflutter1-68d5b",
+    "storage_bucket": "teamflutter1-68d5b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205365347914:android:30662c9aac0f342f01c8b3",
+        "android_client_info": {
+          "package_name": "com.example.broadway_example_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205365347914-mh5s3ojj52p2rac4k510sriidetfc0n0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.broadway_example_ui",
+            "certificate_hash": "422e80f46b61aa31e0f60739d82ae21c89339ca1"
+          }
+        },
+        {
+          "client_id": "205365347914-kofknphi39qvscmqbur6smk55lkacno0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDYoqgPYi1uK3KhaIrmtwe19tRCPFElOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205365347914-kofknphi39qvscmqbur6smk55lkacno0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205365347914:android:df1adf228a57145a01c8b3",
+        "android_client_info": {
+          "package_name": "com.example.stylish_ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205365347914-kofknphi39qvscmqbur6smk55lkacno0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDYoqgPYi1uK3KhaIrmtwe19tRCPFElOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205365347914-kofknphi39qvscmqbur6smk55lkacno0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
