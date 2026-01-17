@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/dashboard_page.dart';
+import 'package:stylish_ecommerce/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: DashboardPage(),
+      home: LoginScreen(),
     );
   }
 }
