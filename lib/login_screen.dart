@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish_ecommerce/dashboard_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -61,7 +62,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardPage(),
+                        ),
+                      );
+                    },
                     child: Text("Login", style: TextStyle(color: Colors.white)),
                   ),
                 ),
