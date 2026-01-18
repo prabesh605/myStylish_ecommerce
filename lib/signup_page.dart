@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/gestures.dart';
+import 'package:stylish_ecommerce/login_screen.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -10,7 +13,8 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-        
+
               SizedBox(height: 30),
               TextFormField(
                 controller: _passwordController,
@@ -56,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  suffixIcon: Icon(Icons.remove_red_eye_outlined)
+                  suffixIcon: Icon(Icons.remove_red_eye_outlined),
                 ),
               ),
               SizedBox(height: 30),
@@ -71,10 +75,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  suffixIcon: Icon(Icons.remove_red_eye_outlined)
+                  suffixIcon: Icon(Icons.remove_red_eye_outlined),
                 ),
               ),
-        
+
               SizedBox(height: 30),
               Text.rich(
                 TextSpan(
@@ -94,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ),
-        
+
               SizedBox(height: 40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -112,111 +116,45 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
               ),
-        
+
               SizedBox(height: 40),
               Text('- Or Continue with -', style: TextStyle(fontSize: 16)),
               SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(12), 
-                    decoration: BoxDecoration(
-                      color: Colors.red[50], 
-                      borderRadius: BorderRadius.circular(100), 
-                      border: Border.all(
-                        color: Colors.redAccent, 
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Image.asset(
-                        'assets/icons/google.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  Container(
-                    padding: EdgeInsets.all(12), 
-                    decoration: BoxDecoration(
-                      color: Colors.red[50], 
-                      borderRadius: BorderRadius.circular(100), 
-                      border: Border.all(
-                        color: Colors.redAccent,
-                        width: 2, // border width
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Image.asset(
-                        'assets/icons/apple.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  Container(
-                    padding: EdgeInsets.all(12), 
-                    decoration: BoxDecoration(
-                      color: Colors.red[50], 
-                      borderRadius: BorderRadius.circular(100), 
-                      border: Border.all(
-                        color: Colors.redAccent, 
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Image.asset(
-                        'assets/icons/facebook.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
+                  _socialButton('assets/icons/google.png', () {}),
+                  const SizedBox(width: 16),
+                  _socialButton('assets/icons/apple.png', () {}),
+                  const SizedBox(width: 16),
+                  _socialButton('assets/icons/facebook.png', () {}),
                 ],
               ),
-              
+
               SizedBox(height: 30),
               Text.rich(
                 TextSpan(
                   text: 'I already have an account. ',
+                  style: const TextStyle(fontSize: 16),
                   children: [
                     TextSpan(
                       text: 'Login',
-                      style: TextStyle(
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
                         decorationColor: Colors.redAccent,
                         decorationThickness: 2,
-                        decoration: TextDecoration.underline,
-                        fontSize: 16,
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
                     ),
                   ],
                 ),
@@ -227,4 +165,35 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+}
+
+Widget _socialButton(String assetPath, VoidCallback onTap) {
+  return InkWell(
+    borderRadius: BorderRadius.circular(50),
+    onTap: onTap,
+    child: Container(
+      width: 48, // Standard mobile touch target
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.redAccent, width: 1.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 3,
+            offset: Offset(1.5, 1.5),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Image.asset(
+          assetPath,
+          width: 22, // Standard icon size
+          height: 22,
+          fit: BoxFit.contain,
+        ),
+      ),
+    ),
+  );
 }
