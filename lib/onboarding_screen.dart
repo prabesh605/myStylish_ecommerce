@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_ecommerce/dashboard_page.dart';
+import 'package:stylish_ecommerce/login_screen.dart';
 import 'package:stylish_ecommerce/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
 import 'package:stylish_ecommerce/splash_or_onboarding_screens/splash_screen1.dart';
 import 'package:stylish_ecommerce/splash_or_onboarding_screens/splash_screen2.dart';
@@ -25,7 +26,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     SplashScreen2(),
     SplashScreen3(),
   ];
-
 
   //disposing pagecontroller
   @override
@@ -60,17 +60,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 AnimatedOpacity(
                   duration: Duration(seconds: 1),
-                  opacity:_screenIndex==0?1:0.0,
-                  child: _splashScreenCount[0]),
+                  opacity: _screenIndex == 0 ? 1 : 0.0,
+                  child: _splashScreenCount[0],
+                ),
                 AnimatedOpacity(
                   duration: Duration(seconds: 1),
-                  opacity:_screenIndex==1?1:0.0,
-                  child: _splashScreenCount[1]),
+                  opacity: _screenIndex == 1 ? 1 : 0.0,
+                  child: _splashScreenCount[1],
+                ),
                 AnimatedOpacity(
                   duration: Duration(seconds: 1),
-                  opacity:_screenIndex==2?1:0.0,
-                  child: _splashScreenCount[2]),
-             
+                  opacity: _screenIndex == 2 ? 1 : 0.0,
+                  child: _splashScreenCount[2],
+                ),
               ],
             ),
 
@@ -161,7 +163,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               : 'Next',
                           textColor: darkPink,
                           callback: () async {
-                          
                             _pageController.animateToPage(
                               _screenIndex + 1,
                               duration: Duration(milliseconds: 350),
@@ -174,7 +175,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DashboardPage(),
+                                  builder: (context) => LoginScreen(),
                                 ),
                               );
                             }

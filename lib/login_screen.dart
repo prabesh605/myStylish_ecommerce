@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/dashboard_page.dart';
+import 'package:stylish_ecommerce/signup_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -111,20 +112,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: 'Create an account. '),
-                        TextSpan(
-                          text: 'Signup',
-                          style: TextStyle(
-                            color: Color(0xffF83758),
-                            decoration: TextDecoration.underline,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                      );
+                    },
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: 'Create an account. '),
+                          TextSpan(
+                            text: 'Signup',
+                            style: TextStyle(
+                              color: Color(0xffF83758),
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
