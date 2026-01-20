@@ -1,30 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
-
-class CategoryModel {
-  String name;
-  String image;
-  CategoryModel(this.image, this.name);
-}
-
-class ProductModel {
-  final String imageUrl;
-  final String name;
-  final String description;
-  final double price;
-  final double initialPrice;
-  final double rating;
-
-  ProductModel(
-    this.imageUrl,
-    this.name,
-    this.description,
-    this.price,
-    this.initialPrice,
-    this.rating,
-  );
-}
+import 'package:stylish_ecommerce/constant/Strings.dart';
+import 'package:stylish_ecommerce/models/category_model.dart';
+import 'package:stylish_ecommerce/screens/product_detail.dart';
+import 'package:stylish_ecommerce/screens/profile_screen.dart';
+import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
+import 'package:stylish_ecommerce/widgets/sort_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -34,61 +15,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final List<String> images = [
-    'https://images.unsplash.com/photo-1586882829491-b81178aa622e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
-    'https://images.unsplash.com/photo-1586871608370-4adee64d1794?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2862&q=80',
-    'https://images.unsplash.com/photo-1586901533048-0e856dff2c0d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-    'https://images.unsplash.com/photo-1586902279476-3244d8d18285?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80',
-    'https://images.unsplash.com/photo-1586943101559-4cdcf86a6f87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1556&q=80',
-    'https://images.unsplash.com/photo-1586951144438-26d4e072b891?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-    'https://images.unsplash.com/photo-1586953983027-d7508a64f4bb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
-  ];
-  List<CategoryModel> categories = [
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Beauty',
-    ),
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Fasion',
-    ),
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Kids',
-    ),
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Men',
-    ),
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Women',
-    ),
-    CategoryModel(
-      'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-      'Animal',
-    ),
-  ];
-  List<ProductModel> products = [
-    ProductModel(
-      'https://plus.unsplash.com/premium_photo-1668319915433-7a35eefa1fad?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      "Women Printed Kurt",
-
-      "Women Printed Kurt Women Printed  Printed KurtWomen Printed Kurt Women Printed Kurt",
-      1500,
-      2499,
-      4,
-    ),
-    ProductModel(
-      'https://images.unsplash.com/photo-1619208382871-96f4d45bc840?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      "Men clothes",
-
-      "Men clothesMen clothesMen clothesMen clothesMen clothesMen clothesMen clothesMen clothes",
-      1600,
-      4099,
-      4.5,
-    ),
-  ];
   // List categories = ['Beauty', 'Fasion', 'Kids', 'Men', 'Women', 'Animals'];
   @override
   Widget build(BuildContext context) {
@@ -98,7 +24,18 @@ class _DashboardPageState extends State<DashboardPage> {
         centerTitle: true,
         title: Image.asset('assets/images/stylish.png', height: 35),
         actions: [
-          CircleAvatar(radius: 20, backgroundColor: Colors.blue),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/profile.png'),
+            ),
+          ),
           SizedBox(width: 10),
         ],
       ),
@@ -137,7 +74,8 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               SizedBox(height: 20),
               SizedBox(
-                height: 120,
+                height: MediaQuery.of(context).size.height * 0.14,
+                // height: 120,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
@@ -181,7 +119,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 options: CarouselOptions(
                   autoPlay: true,
 
-                  aspectRatio: 2.0,
+                  viewportFraction: 1,
                   enlargeCenterPage: false,
                 ),
               ),
@@ -194,13 +132,22 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               SizedBox(height: 20),
               SizedBox(
-                height: 600,
+                height: MediaQuery.of(context).size.height * 0.55,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
                     return ItemContainerWidget(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetail(product: product),
+                          ),
+                        );
+                      },
                       visibleDescription: true,
                       imageUrl: product.imageUrl,
                       name: product.name,
@@ -234,6 +181,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       price: product.price,
                       initialPrice: product.initialPrice,
                       rating: product.rating,
+                      onTap: () {},
                     );
                   },
                 ),
@@ -338,132 +286,6 @@ class DealWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ItemContainerWidget extends StatelessWidget {
-  const ItemContainerWidget({
-    super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.initialPrice,
-    required this.rating,
-    required this.visibleDescription,
-  });
-  final String imageUrl;
-  final String name;
-  final String description;
-  final double price;
-  final double initialPrice;
-  final double rating;
-  final bool visibleDescription;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      // padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      width: MediaQuery.of(context).size.width * 0.4,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadiusGeometry.circular(12),
-            child: Image.network(
-              imageUrl,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  maxLines: 2,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Visibility(
-                  visible: visibleDescription,
-                  child: Text(
-                    description,
-                    maxLines: 4,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text("Rs. $price"),
-                SizedBox(height: 10),
-                RichText(
-                  selectionColor: Colors.black,
-
-                  text: TextSpan(
-                    text: "Rs. $initialPrice",
-                    style: TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: " 40% Off",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                RatingBar.builder(
-                  itemSize: 20,
-                  initialRating: rating,
-
-                  itemBuilder: (context, _) =>
-                      Icon(Icons.star, color: Colors.amber),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
-                ),
-                SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SortWidget extends StatelessWidget {
-  const SortWidget({super.key, required this.name, required this.icon});
-  final String name;
-  final Icon icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        // border: Border.all(width: 0),
-      ),
-      padding: EdgeInsets.all(4),
-      child: Row(children: [Text(name), icon]),
     );
   }
 }

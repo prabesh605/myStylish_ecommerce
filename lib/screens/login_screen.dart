@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_ecommerce/dashboard_page.dart';
-import 'package:stylish_ecommerce/signup_page.dart';
+import 'package:stylish_ecommerce/screens/dashboard_page.dart';
+import 'package:stylish_ecommerce/screens/signup_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/gestures.dart';
-import 'package:stylish_ecommerce/login_screen.dart';
+import 'package:stylish_ecommerce/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

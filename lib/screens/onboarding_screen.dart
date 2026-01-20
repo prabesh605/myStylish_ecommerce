@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stylish_ecommerce/dashboard_page.dart';
-import 'package:stylish_ecommerce/login_screen.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/splash_screen1.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/splash_screen2.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/splash_screen3.dart';
+import 'package:stylish_ecommerce/screens/dashboard_page.dart';
+import 'package:stylish_ecommerce/screens/login_screen.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/splash_screen1.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/splash_screen2.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/splash_screen3.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

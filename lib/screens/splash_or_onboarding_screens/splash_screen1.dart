@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
 
-class SplashScreen3 extends StatelessWidget {
-  const SplashScreen3({super.key});
+class SplashScreen1 extends StatelessWidget {
+  const SplashScreen1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +15,14 @@ class SplashScreen3 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
       
-           Image.asset('assets/images/splash_screen_images/screen3.png',
+           Image.asset('assets/images/splash_screen_images/screen1.png',
            fit:BoxFit.cover,
            height: mHeight*0.4,
            width: mWidth*0.8,
            ),
         
-        heading24pxExtraBold(heading:'Get Your Order'),SizedBox(height:mHeight*0.015),
-        paragraph14pxSemiBoldwithCenterText(title:'Receive your order quickly at your doorstep with ease.Track and enjoy a smooth delivery experience every time.'),
+        heading24pxExtraBold(heading:'Choose Products'),SizedBox(height:mHeight*0.015),
+        paragraph14pxSemiBoldwithCenterText(title:'Browse through a wide range of products with ease.Select the items you love and add them to your cart effortlessly.'),
   
          
         ],

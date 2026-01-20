@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_ecommerce/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
+import 'package:stylish_ecommerce/screens/splash_or_onboarding_screens/materialsfor_splash_screen.dart';
 
 class SplashScreen2 extends StatelessWidget {
   const SplashScreen2({super.key});
