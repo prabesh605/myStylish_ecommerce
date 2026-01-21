@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stylish_ecommerce/screens/dashboard_page.dart';
+import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 // import 'package:stylish_ecommerce/dashboard_page.dart';
 import 'package:stylish_ecommerce/firebase_options.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';

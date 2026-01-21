@@ -2,8 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
-import 'package:stylish_ecommerce/screens/product_detail.dart';
-import 'package:stylish_ecommerce/screens/profile_screen.dart';
+import 'package:stylish_ecommerce/screens/login_screen.dart';
+import 'package:stylish_ecommerce/screens/user_model/product_detail.dart';
+import 'package:stylish_ecommerce/screens/user_model/profile_screen.dart';
 import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
 import 'package:stylish_ecommerce/widgets/sort_widget.dart';
 
@@ -40,7 +41,23 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
 
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(child: Container()),
+            ListTile(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
