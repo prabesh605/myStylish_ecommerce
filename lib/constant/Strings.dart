@@ -34,27 +34,39 @@ final List<String> images = [
 
 List<CategoryModel> categories = [
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Beauty',
+    code: '0X142',
+    name: 'Beauty',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Fasion',
+    code: '0X142',
+    name: 'Fasion',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Kids',
+    code: '0X142',
+    name: 'Kids',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Men',
+    code: '0X142',
+    name: 'Men',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Women',
+    code: '0X142',
+    name: 'Women',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
   CategoryModel(
-    'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
-    'Animal',
+    code: '0X142',
+    name: 'Animal',
+    image:
+        'https://img.freepik.com/free-photo/collage-portrait-with-natural-elements_23-2151907629.jpg?semt=ais_hybrid&w=740&q=80',
   ),
 ];

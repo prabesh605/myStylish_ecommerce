@@ -1,0 +1,23 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
+class ImageService {
+  final ImagePicker picker = ImagePicker();
+  File? image;
+  Future<void> pickImageFromGallery() async {
+    final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      image = File(picked.path);
+      print(image);
+    }
+  }
+
+  Future<void> pickImageFromCamera() async {
+    final XFile? picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked != null) {
+      image = File(picked.path);
+      print(image);
+    }
+  }
+}
