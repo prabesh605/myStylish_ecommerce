@@ -4,12 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
+import 'package:stylish_ecommerce/bloc/uploadImage/upload_bloc.dart';
 // import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 // import 'package:stylish_ecommerce/dashboard_page.dart';
 import 'package:stylish_ecommerce/firebase_options.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';
 import 'package:stylish_ecommerce/screens/onboarding_screen.dart';
 import 'package:stylish_ecommerce/service/firebase_service.dart';
+import 'package:stylish_ecommerce/service/image_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +39,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => CategoryBloc(FirebaseService()))],
+      providers: [
+        BlocProvider(create: (_) => CategoryBloc(FirebaseService())),
+        BlocProvider(create: (_) => UploadBloc(ImageService())),
+      ],
       child: MaterialApp(
         title: 'Stylish Ecommerce App',
         debugShowCheckedModeBanner: false,

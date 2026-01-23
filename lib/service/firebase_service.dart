@@ -16,4 +16,12 @@ class FirebaseService {
         )
         .toList();
   }
+
+  Future<void> updateCategory(CategoryModel category) async {
+    try {
+      await categoryCollection.doc(category.id).update(category.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

@@ -8,3 +8,8 @@ class AddCategory extends CategoryEvent {
 }
 
 class GetCategories extends CategoryEvent {}
+
+class UpdateCategory extends CategoryEvent {
+  CategoryModel category;
+  UpdateCategory(this.category);
+}

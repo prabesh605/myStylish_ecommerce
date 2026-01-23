@@ -18,5 +18,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       final List<CategoryModel> categories = await service.getAllCategories();
       emit(CategoryLoaded(categories));
     });
+    on<UpdateCategory>((event, emit) async {
+      emit(CategoryLoading());
+      await service.updateCategory(event.category);
+      final List<CategoryModel> categories = await service.getAllCategories();
+      emit(CategoryLoaded(categories));
+    });
   }
 }
