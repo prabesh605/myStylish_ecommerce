@@ -1,10 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
+import 'package:stylish_ecommerce/bloc/category/category_event.dart';
+import 'package:stylish_ecommerce/bloc/category/category_state.dart';
+import 'package:stylish_ecommerce/bloc/product/product_bloc.dart';
+import 'package:stylish_ecommerce/bloc/product/product_event.dart';
+import 'package:stylish_ecommerce/bloc/product/product_state.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';
-import 'package:stylish_ecommerce/screens/user_model/product_detail.dart';
 import 'package:stylish_ecommerce/screens/user_model/profile_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/product_detail.dart';
 import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
 import 'package:stylish_ecommerce/widgets/sort_widget.dart';
 
@@ -16,7 +23,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // List categories = ['Beauty', 'Fasion', 'Kids', 'Men', 'Women', 'Animals'];
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryBloc>().add(GetCategories());
+    context.read<ProductBloc>().add(GetProduct());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,33 +106,45 @@ class _DashboardPageState extends State<DashboardPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.14,
                 // height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final CategoryModel category = categories[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 60.0,
-                            height: 60.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(category.image),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                child: BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                    if (state is CategoryLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state is CategoryError) {
+                      return Center(child: Text(state.error));
+                    } else if (state is CategoryLoaded) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.categories.length,
+                        itemBuilder: (context, index) {
+                          final CategoryModel category =
+                              state.categories[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 60.0,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(category.image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
 
-                          // CircleAvatar(radius: 25, backgroundColor: Colors.black),
-                          SizedBox(height: 10),
-                          Text(category.name),
-                        ],
-                      ),
-                    );
+                                // CircleAvatar(radius: 25, backgroundColor: Colors.black),
+                                SizedBox(height: 10),
+                                Text(category.name),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    return SizedBox.shrink();
                   },
                 ),
               ),
@@ -150,29 +175,40 @@ class _DashboardPageState extends State<DashboardPage> {
               SizedBox(height: 20),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return ItemContainerWidget(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetail(product: product),
-                          ),
-                        );
-                      },
-                      visibleDescription: true,
-                      imageUrl: product.imageUrl,
-                      name: product.name,
-                      description: product.description,
-                      price: product.price,
-                      initialPrice: product.initialPrice,
-                      rating: product.rating,
-                    );
+                child: BlocBuilder<ProductBloc, ProductState>(
+                  builder: (context, state) {
+                    if (state is ProductLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state is ProductError) {
+                      return Center(child: Text("Error"));
+                    } else if (state is ProductLoaded) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.products.length,
+                        itemBuilder: (context, index) {
+                          final product = state.products[index];
+                          return ItemContainerWidget(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDetail(product: product),
+                                ),
+                              );
+                            },
+                            visibleDescription: true,
+                            imageUrl: product.imageUrl,
+                            name: product.name,
+                            description: product.description,
+                            price: product.price,
+                            initialPrice: product.initialPrice,
+                            rating: product.rating,
+                          );
+                        },
+                      );
+                    }
+                    return Container();
                   },
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
-import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 import 'package:stylish_ecommerce/screens/signup_page.dart';
+import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -68,8 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AdminDashboardScreen(),
-                          // DashboardPage(),
+                          builder: (context) =>
+                              //  AdminDashboardScreen(),
+                              DashboardPage(),
                         ),
                       );
                     },
