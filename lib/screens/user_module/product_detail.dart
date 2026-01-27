@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:stylish_ecommerce/bloc/product/product_bloc.dart';
+import 'package:stylish_ecommerce/bloc/product/product_event.dart';
+import 'package:stylish_ecommerce/bloc/product/product_state.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
-import 'package:stylish_ecommerce/screens/user_model/checkout_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/cart_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/checkout_screen.dart';
 import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
 import 'package:stylish_ecommerce/widgets/sort_widget.dart';
 
@@ -16,11 +21,27 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   @override
+  void initState() {
+    super.initState();
+    context.read<ProductBloc>().add(GetProduct());
+  }
+
+  int count = 1;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart)),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CartScreen()),
+              );
+            },
+            icon: Icon(Icons.shopping_cart),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -41,25 +62,77 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
               ),
               SizedBox(height: 20),
-              Text(
-                widget.product.name,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              Text(
-                "Here is sub Title",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 20),
-              RatingBar.builder(
-                itemSize: 20,
-                initialRating: widget.product.rating,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        "Here is sub Title",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                      SizedBox(height: 20),
+                      RatingBar.builder(
+                        itemSize: 20,
+                        initialRating: widget.product.rating,
 
-                itemBuilder: (context, _) =>
-                    Icon(Icons.star, color: Colors.amber),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
+                        itemBuilder: (context, _) =>
+                            Icon(Icons.star, color: Colors.amber),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                        ),
+                        onPressed: () {
+                          if (count > 1) {
+                            setState(() {
+                              count--;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.remove, color: Colors.white),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.green),
+                        ),
+                        child: Text("$count"),
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (count < 10) {
+                              count++;
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.add, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+
               SizedBox(height: 20),
               Text("Rs. ${widget.product.price}"),
               SizedBox(height: 10),
@@ -100,7 +173,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     ),
                     onPressed: () {},
                     label: Text(
-                      "Go to cart",
+                      "Add to cart",
                       style: TextStyle(color: Colors.white),
                     ),
                     icon: Icon(Icons.shopping_cart, color: Colors.white),
@@ -192,25 +265,37 @@ class _ProductDetailState extends State<ProductDetail> {
                 ],
               ),
               SizedBox(height: 20),
-              SizedBox(
-                height: 400,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return ItemContainerWidget(
-                      visibleDescription: false,
-                      imageUrl: product.imageUrl,
-                      name: product.name,
-                      description: product.description,
-                      price: product.price,
-                      initialPrice: product.initialPrice,
-                      rating: product.rating,
-                      onTap: () {},
+
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is ProductError) {
+                    return Center(child: Text("Error"));
+                  } else if (state is ProductLoaded) {
+                    return SizedBox(
+                      height: 400,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.products.length,
+                        itemBuilder: (context, index) {
+                          final product = state.products[index];
+                          return ItemContainerWidget(
+                            visibleDescription: false,
+                            imageUrl: product.imageUrl,
+                            name: product.name,
+                            description: product.description,
+                            price: product.price,
+                            initialPrice: product.initialPrice,
+                            rating: product.rating,
+                            onTap: () {},
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  }
+                  return Container();
+                },
               ),
             ],
           ),

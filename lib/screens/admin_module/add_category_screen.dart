@@ -19,6 +19,7 @@ class AddCategoryScreen extends StatefulWidget {
 }
 
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
+  final formkey = GlobalKey<FormState>();
   ImageService imageService = ImageService();
   File? imageFile;
   @override
@@ -107,94 +108,117 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 imageController.text = state.imageURl;
               }
             },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(category == null ? "Add Category" : "Update Category"),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: categoryNameController,
-                  decoration: InputDecoration(
-                    label: Text("Category Name"),
-                    border: OutlineInputBorder(),
+            child: Form(
+              key: formkey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(category == null ? "Add Category" : "Update Category"),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: categoryNameController,
+                    decoration: InputDecoration(
+                      label: Text("Category Name"),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty || value == null) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: imageController,
-                        decoration: InputDecoration(
-                          label: Text("Image"),
-                          border: OutlineInputBorder(),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: imageController,
+                          decoration: InputDecoration(
+                            label: Text("Image"),
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty || value == null) {
+                              return 'Please upload Image';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                    ),
-                    SizedBox(width: 6),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      onPressed: () async {
-                        context.read<UploadBloc>().add(UploadImage());
-                        // chooseImageUploadOption();
-                        // imageFile = await imageService.pickImageFromGallery();
+                      SizedBox(width: 6),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () async {
+                          context.read<UploadBloc>().add(UploadImage());
+                          // chooseImageUploadOption();
+                          // imageFile = await imageService.pickImageFromGallery();
 
-                        // if (imageFile != null) {
-                        //   final String imageURl = await imageService.uploadImage(
-                        //     imageFile,
-                        //   );
-                        //   imageController.text = imageURl;
-                        // }
-                        // Navigator.pop(context);
-                        // imageService.pickImage();
-                      },
-                      child: Text(
-                        "Upload",
-                        style: TextStyle(color: Colors.white),
+                          // if (imageFile != null) {
+                          //   final String imageURl = await imageService.uploadImage(
+                          //     imageFile,
+                          //   );
+                          //   imageController.text = imageURl;
+                          // }
+                          // Navigator.pop(context);
+                          // imageService.pickImage();
+                        },
+                        child: Text(
+                          "Upload",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: codeController,
+                    decoration: InputDecoration(
+                      label: Text("Code"),
+                      border: OutlineInputBorder(),
                     ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: codeController,
-                  decoration: InputDecoration(
-                    label: Text("Code"),
-                    border: OutlineInputBorder(),
+                    validator: (value) {
+                      if (value!.isEmpty || value == null) {
+                        return 'Please enter code';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(),
-                    backgroundColor: Colors.red,
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(),
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: () {
+                      if (formkey.currentState!.validate()) {
+                        final categoryModel = CategoryModel(
+                          id: category?.id ?? "",
+                          name: categoryNameController.text,
+                          image: imageController.text,
+                          code: codeController.text,
+                        );
+                        category == null
+                            ? context.read<CategoryBloc>().add(
+                                AddCategory(categoryModel),
+                              )
+                            : context.read<CategoryBloc>().add(
+                                UpdateCategory(categoryModel),
+                              );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(
+                      category == null ? "Add Category" : "Update Category",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  onPressed: () {
-                    final categoryModel = CategoryModel(
-                      id: category?.id ?? "",
-                      name: categoryNameController.text,
-                      image: imageController.text,
-                      code: codeController.text,
-                    );
-                    category == null
-                        ? context.read<CategoryBloc>().add(
-                            AddCategory(categoryModel),
-                          )
-                        : context.read<CategoryBloc>().add(
-                            UpdateCategory(categoryModel),
-                          );
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    category == null ? "Add Category" : "Update Category",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                SizedBox(height: 20),
-              ],
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );

@@ -19,6 +19,7 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
+  final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -26,14 +27,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
     context.read<ProductBloc>().add(GetProduct());
   }
 
-  void createAddProductBottomSheet() {
-    final imageUrlController = TextEditingController();
-    final categoryController = TextEditingController();
-    final nameController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final priceController = TextEditingController();
-    final initialPriceController = TextEditingController();
-    final ratingController = TextEditingController(text: "4.0");
+  void updateAddProductBottomSheet(ProductModel? product) {
+    final imageUrlController = TextEditingController(text: product?.imageUrl);
+    final categoryController = TextEditingController(text: product?.categoryId);
+    final nameController = TextEditingController(text: product?.name);
+    final descriptionController = TextEditingController(
+      text: product?.description,
+    );
+    final priceController = TextEditingController(
+      text: "${product?.price ?? "0"}",
+    );
+    final initialPriceController = TextEditingController(
+      text: "${product?.initialPrice ?? "0"}",
+    );
+    final ratingController = TextEditingController(
+      text: "${product?.rating ?? "0"}",
+    );
 
     showModalBottomSheet(
       context: context,
@@ -68,131 +77,188 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 imageUrlController.text = state.imageURl;
               }
             },
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Add Product"),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      label: Text("Product Name"),
-                      border: OutlineInputBorder(),
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(product == null ? "Add Product" : "Update Product"),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        label: Text("Product Name"),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value == null) {
+                          return 'Please enter Name';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: descriptionController,
-                    decoration: InputDecoration(
-                      label: Text("Product Description"),
-                      border: OutlineInputBorder(),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(
+                        label: Text("Product Description"),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value == null) {
+                          return 'Please enter Description';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: Text("Product Price"),
-                      border: OutlineInputBorder(),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        label: Text("Product Price"),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value == null) {
+                          return 'Please enter price';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: initialPriceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: Text("Product initialPrice"),
-                      border: OutlineInputBorder(),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: initialPriceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        label: Text("Product initialPrice"),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value == null) {
+                          return 'Please enter initial price';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  // DropdownButtonFormField(
+                    SizedBox(height: 20),
+                    // DropdownButtonFormField(
 
-                  //   items: items,
-                  //   onChanged: onChanged
-                  //   )
-                  BlocBuilder<CategoryBloc, CategoryState>(
-                    builder: (context, state) {
-                      if (state is CategoryLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (state is CategoryLoaded) {
-                        final categories = state.categories;
-                        return DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                          initialValue: state.categories.first.id,
-                          items: categories
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e.id,
-                                  child: Text(e.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            print(value);
-                            categoryController.text = value ?? "";
-                            // categoryController.text = value ?? "";
-                          },
-                        );
+                    //   items: items,
+                    //   onChanged: onChanged
+                    //   )
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (context, state) {
+                        if (state is CategoryLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (state is CategoryLoaded) {
+                          final categories = state.categories;
+                          return DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                            initialValue: product == null
+                                ? state.categories.first.id
+                                : product.categoryId,
+                            items: categories
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e.id,
+                                    child: Text(e.name),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              print(value);
+                              categoryController.text = value ?? "";
+                              // categoryController.text = value ?? "";
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty || value == null) {
+                                return 'select the field';
+                              }
+                              return null;
+                            },
+                          );
 
-                        // TextFormField(
-                        //   controller: categoryController,
-                        //   decoration: InputDecoration(
-                        //     label: Text("Product Category"),
-                        //     border: OutlineInputBorder(),
-                        //   ),
-                        // );
-                      }
-                      return SizedBox.shrink();
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: imageUrlController,
-                          decoration: InputDecoration(
-                            label: Text("Product Image"),
-                            border: OutlineInputBorder(),
+                          // TextFormField(
+                          //   controller: categoryController,
+                          //   decoration: InputDecoration(
+                          //     label: Text("Product Category"),
+                          //     border: OutlineInputBorder(),
+                          //   ),
+                          // );
+                        }
+                        return SizedBox.shrink();
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: imageUrlController,
+                            decoration: InputDecoration(
+                              label: Text("Product Image"),
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty || value == null) {
+                                return 'Please upload image';
+                              }
+                              return null;
+                            },
                           ),
                         ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.read<UploadBloc>().add(UploadImage());
+                          },
+                          child: Text("Upload"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          // print("Validate");
+                          final productData = ProductModel(
+                            id: product?.id ?? "",
+                            imageUrl: imageUrlController.text,
+                            name: nameController.text,
+                            description: descriptionController.text,
+                            categoryId: categoryController.text,
+                            categoryName: "",
+                            price: double.parse(priceController.text),
+                            initialPrice: double.parse(
+                              initialPriceController.text,
+                            ),
+                            rating: double.parse(ratingController.text),
+                          );
+                          product == null
+                              ? context.read<ProductBloc>().add(
+                                  AddProduct(productData),
+                                )
+                              : context.read<ProductBloc>().add(
+                                  UpdateProduct(productData),
+                                );
+                          Navigator.pop(context);
+                        } else {
+                          print("enter");
+                        }
+                        // print(product);
+                      },
+                      child: Text(
+                        product == null ? "Add Product" : "Update Product",
                       ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<UploadBloc>().add(UploadImage());
-                        },
-                        child: Text("Upload"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      final product = ProductModel(
-                        id: '',
-                        imageUrl: imageUrlController.text,
-                        name: nameController.text,
-                        description: descriptionController.text,
-                        categoryId: categoryController.text,
-                        categoryName: '',
-                        price: double.parse(priceController.text),
-                        initialPrice: double.parse(initialPriceController.text),
-                        rating: double.parse(ratingController.text),
-                      );
-                      context.read<ProductBloc>().add(AddProduct(product));
-                      Navigator.pop(context);
-                      print(product);
-                    },
-                    child: Text("Add Product"),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -207,7 +273,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(title: Text("Products")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          createAddProductBottomSheet();
+          updateAddProductBottomSheet(null);
         },
         child: Icon(Icons.add),
       ),
@@ -272,7 +338,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 Text("Price: Rs.${product.price}"),
                                 SizedBox(height: 20),
                                 OutlinedButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    updateAddProductBottomSheet(product);
+                                  },
                                   label: Text("Update"),
                                 ),
                               ],

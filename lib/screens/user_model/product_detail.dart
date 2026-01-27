@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
-import 'package:stylish_ecommerce/screens/user_model/checkout_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/checkout_screen.dart';
 import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
 import 'package:stylish_ecommerce/widgets/sort_widget.dart';
 

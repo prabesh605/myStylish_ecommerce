@@ -10,7 +10,8 @@ import 'package:stylish_ecommerce/bloc/product/product_state.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';
-import 'package:stylish_ecommerce/screens/user_model/profile_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/product_list_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/profile_screen.dart';
 import 'package:stylish_ecommerce/screens/user_module/product_detail.dart';
 import 'package:stylish_ecommerce/widgets/item_container_widget.dart';
 import 'package:stylish_ecommerce/widgets/sort_widget.dart';
@@ -167,22 +168,30 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               SizedBox(height: 20),
               DealWidget(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListScreen(),
+                    ),
+                  );
+                },
                 name: 'Deal of the Day',
                 dateOrTime: '22h 55m 20s remaining',
                 icon: Icons.alarm,
                 color: Colors.blue,
               ),
               SizedBox(height: 20),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: BlocBuilder<ProductBloc, ProductState>(
-                  builder: (context, state) {
-                    if (state is ProductLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (state is ProductError) {
-                      return Center(child: Text("Error"));
-                    } else if (state is ProductLoaded) {
-                      return ListView.builder(
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is ProductError) {
+                    return Center(child: Text("Error"));
+                  } else if (state is ProductLoaded) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: state.products.length,
                         itemBuilder: (context, index) {
@@ -206,53 +215,78 @@ class _DashboardPageState extends State<DashboardPage> {
                             rating: product.rating,
                           );
                         },
-                      );
-                    }
-                    return Container();
-                  },
-                ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
               SizedBox(height: 20),
               DealWidget(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListScreen(),
+                    ),
+                  );
+                },
                 name: 'Trending Products',
                 dateOrTime: 'Last Date 29/02/22',
                 icon: Icons.alarm,
                 color: Color(0xffFD6E87),
               ),
-              SizedBox(
-                height: 400,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return ItemContainerWidget(
-                      visibleDescription: false,
-                      imageUrl: product.imageUrl,
-                      name: product.name,
-                      description: product.description,
-                      price: product.price,
-                      initialPrice: product.initialPrice,
-                      rating: product.rating,
-                      onTap: () {},
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is ProductError) {
+                    return Center(child: Text("Error"));
+                  } else if (state is ProductLoaded) {
+                    return SizedBox(
+                      height: 400,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.products.length,
+                        itemBuilder: (context, index) {
+                          final product = state.products[index];
+                          return ItemContainerWidget(
+                            visibleDescription: false,
+                            imageUrl: product.imageUrl,
+                            name: product.name,
+                            description: product.description,
+                            price: product.price,
+                            initialPrice: product.initialPrice,
+                            rating: product.rating,
+                            onTap: () {},
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  }
+                  return Container();
+                },
               ),
               SizedBox(height: 20),
               Column(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(12),
-                    child: Image.asset(
-                      'assets/images/newImage.png',
-                      height: 100,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 200,
+                    child: ClipRRect(
+                      borderRadius: BorderRadiusGeometry.circular(12),
+                      child: Image.asset(
+                        'assets/images/newImage.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('New Arrivals'),
                           Text("Summer'25 COllections"),
@@ -269,7 +303,14 @@ class _DashboardPageState extends State<DashboardPage> {
                             color: Color(0xffF83758),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductListScreen(),
+                            ),
+                          );
+                        },
                         label: Text(
                           "View all",
                           style: TextStyle(color: Colors.white),
@@ -295,11 +336,13 @@ class DealWidget extends StatelessWidget {
     required this.dateOrTime,
     required this.icon,
     required this.color,
+    required this.onTap,
   });
   final String name;
   final String dateOrTime;
   final IconData icon;
   final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +376,7 @@ class DealWidget extends StatelessWidget {
               ),
               side: BorderSide(width: 2.0, color: Colors.white),
             ),
-            onPressed: () {},
+            onPressed: onTap,
             label: Text("View all", style: TextStyle(color: Colors.white)),
             icon: Icon(Icons.arrow_forward, color: Colors.white),
           ),
