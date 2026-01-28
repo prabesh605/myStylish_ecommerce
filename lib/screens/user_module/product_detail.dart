@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:stylish_ecommerce/bloc/cart/cart_bloc.dart';
+import 'package:stylish_ecommerce/bloc/cart/cart_event.dart';
 import 'package:stylish_ecommerce/bloc/product/product_bloc.dart';
 import 'package:stylish_ecommerce/bloc/product/product_event.dart';
 import 'package:stylish_ecommerce/bloc/product/product_state.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
+import 'package:stylish_ecommerce/models/cart_model.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
 import 'package:stylish_ecommerce/screens/user_module/cart_screen.dart';
 import 'package:stylish_ecommerce/screens/user_module/checkout_screen.dart';
@@ -171,7 +174,20 @@ class _ProductDetailState extends State<ProductDetail> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      final cart = CartModel(
+                        name: widget.product.name,
+                        productDetail: widget.product.description,
+                        price: widget.product.price,
+                        itemCount: count,
+                        rating: widget.product.rating,
+                        categoryId: widget.product.categoryId,
+                        categoryName: widget.product.categoryName,
+                        imageUrl: widget.product.imageUrl,
+                      );
+                      context.read<CartBloc>().add(AddCart(cart));
+                      Navigator.pop(context);
+                    },
                     label: Text(
                       "Add to cart",
                       style: TextStyle(color: Colors.white),

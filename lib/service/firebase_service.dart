@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stylish_ecommerce/models/cart_model.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
 
@@ -7,6 +8,8 @@ class FirebaseService {
       .collection('categories');
   final CollectionReference productCollection = FirebaseFirestore.instance
       .collection('products');
+  final CollectionReference cartCollection = FirebaseFirestore.instance
+      .collection('carts');
   Future<void> addCategory(CategoryModel category) async {
     try {
       await categoryCollection.add(category.toJson());
@@ -52,6 +55,30 @@ class FirebaseService {
   Future<void> updateProduct(ProductModel product) async {
     try {
       await productCollection.doc(product.id).update(product.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  //for cart
+  Future<void> addCart(CartModel cart) async {
+    try {
+      await cartCollection.add(cart.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<CartModel>> getAllCart() async {
+    final response = await cartCollection.get();
+    return response.docs
+        .map((e) => CartModel.fromJson(e.data() as Map<String, dynamic>, e.id))
+        .toList();
+  }
+
+  Future<void> updateCart(CartModel cart) async {
+    try {
+      await productCollection.doc(cart.id).update(cart.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }

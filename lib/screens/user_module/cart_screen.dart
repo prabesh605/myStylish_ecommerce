@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:stylish_ecommerce/bloc/cart/cart_bloc.dart';
+import 'package:stylish_ecommerce/bloc/cart/cart_event.dart';
+import 'package:stylish_ecommerce/bloc/cart/cart_state.dart';
 import 'package:stylish_ecommerce/constant/Strings.dart';
+
+double total = 0;
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -10,6 +16,12 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CartBloc>().add(GetCart());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +60,7 @@ class _CartScreenState extends State<CartScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Text("Total: 7000"),
+                  Text("Total: $total"),
                   SizedBox(width: 40),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -82,95 +94,126 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        // borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 0.5,
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 160,
-                width: 160,
-                child: ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(12),
-                  child: Image.network(
-                    products.first.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 20),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  Text("Women's Casual Wear"),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text("Variation: "),
-                      Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.4),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text("Black"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  RatingBar.builder(
-                    itemSize: 20,
-                    initialRating: 4,
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is CartError) {
+          return Center(child: Text(state.error));
+        } else if (state is CartLoaded) {
+          final carts = state.carts;
 
-                    itemBuilder: (context, _) =>
-                        Icon(Icons.star, color: Colors.amber),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.4),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text("Rs. 34.00"),
+          total = carts.fold<double>(
+            0.0,
+            (total, carts) => total + (carts.itemCount * carts.price),
+          );
+          print(total);
+
+          return Expanded(
+            child: ListView.builder(
+              itemCount: carts.length,
+              itemBuilder: (context, index) {
+                final cart = carts[index];
+                return Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    // borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: 0.5,
+                        blurRadius: 2,
+                        offset: Offset(0, 1),
                       ),
-                      SizedBox(width: 10),
-                      Text("Items: 5"),
                     ],
                   ),
-                ],
-              ),
-            ],
-          ),
-          Divider(),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Total Order(5) :"), Text("Rs. 5 x 34.00")],
-          ),
-        ],
-      ),
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 160,
+                            width: 160,
+                            child: ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(12),
+                              child: Image.network(
+                                cart.imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10),
+                              Text(cart.name),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text("Variation: "),
+                                  Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(width: 0.4),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text("Black"),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              RatingBar.builder(
+                                itemSize: 20,
+                                initialRating: cart.rating,
+
+                                itemBuilder: (context, _) =>
+                                    Icon(Icons.star, color: Colors.amber),
+                                onRatingUpdate: (rating) {
+                                  print(rating);
+                                },
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(width: 0.4),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text("Rs. ${cart.price}"),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text("Items: ${cart.itemCount}"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Total Order(${cart.itemCount}) :"),
+                          Text("Rs. ${cart.itemCount * cart.price}"),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

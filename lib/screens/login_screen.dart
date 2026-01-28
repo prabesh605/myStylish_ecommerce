@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
 import 'package:stylish_ecommerce/screens/signup_page.dart';
 import 'package:stylish_ecommerce/screens/user_module/dashboard_page.dart';
+import 'package:stylish_ecommerce/screens/user_module/user_navigationbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: GestureDetector( 
+                  child: GestureDetector(
                     child: Text(
                       "Forget password?",
                       style: TextStyle(color: Color(0xffF83758)),
@@ -68,9 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              //  AdminDashboardScreen(),
-                              DashboardPage(),
+                          builder: (context) => UserNavigationbar(),
+                          //  AdminDashboardScreen(),
+                          // DashboardPage(),
                         ),
                       );
                     },
