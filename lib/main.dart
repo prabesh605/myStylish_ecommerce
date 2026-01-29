@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_ecommerce/bloc/cart/cart_bloc.dart';
 import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
+import 'package:stylish_ecommerce/bloc/orders/order_bloc.dart';
 import 'package:stylish_ecommerce/bloc/product/product_bloc.dart';
 import 'package:stylish_ecommerce/bloc/uploadImage/upload_bloc.dart';
 // import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => UploadBloc(ImageService())),
         BlocProvider(create: (_) => ProductBloc(FirebaseService())),
         BlocProvider(create: (_) => CartBloc(FirebaseService())),
+        BlocProvider(create: (_) => OrderBloc(FirebaseService())),
       ],
       child: MaterialApp(
         title: 'Stylish Ecommerce App',

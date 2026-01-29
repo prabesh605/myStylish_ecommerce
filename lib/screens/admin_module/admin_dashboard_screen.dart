@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/screens/admin_module/add_category_screen.dart';
 import 'package:stylish_ecommerce/screens/admin_module/add_product_screen.dart';
+import 'package:stylish_ecommerce/screens/admin_module/admin_order_page.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -54,14 +55,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.pink,
-                borderRadius: BorderRadius.circular(12),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminOrderPage()),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.pink,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(child: Text("View Order")),
               ),
-              child: Center(child: Text("View Order")),
             ),
             //Product
             //Category

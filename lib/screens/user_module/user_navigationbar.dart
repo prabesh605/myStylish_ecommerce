@@ -11,29 +11,44 @@ class UserNavigationbar extends StatefulWidget {
 
 class _UserNavigationbarState extends State<UserNavigationbar> {
   int selectIndex = 0;
-  List items = [
+
+  final List<Widget> items = [
     DashboardPage(),
-
+    Text("Wishlist"),
     CartScreen(),
-
-    Container(child: Text("Setting")),
+    Center(child: Text("Search Screen")),
+    Center(child: Text("Settings")),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: items.elementAt(selectIndex),
+      body: items[selectIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home)),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart)),
-          BottomNavigationBarItem(icon: Icon(Icons.settings)),
-        ],
+        type: BottomNavigationBarType.fixed,
         currentIndex: selectIndex,
         onTap: (index) {
           setState(() {
             selectIndex = index;
           });
         },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border_outlined),
+
+            label: 'WishList',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }

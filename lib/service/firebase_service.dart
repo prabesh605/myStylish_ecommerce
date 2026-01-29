@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_ecommerce/models/cart_model.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
+import 'package:stylish_ecommerce/models/order_model.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
 
 class FirebaseService {
@@ -10,6 +11,8 @@ class FirebaseService {
       .collection('products');
   final CollectionReference cartCollection = FirebaseFirestore.instance
       .collection('carts');
+  final CollectionReference orderCollection = FirebaseFirestore.instance
+      .collection('orders');
   Future<void> addCategory(CategoryModel category) async {
     try {
       await categoryCollection.add(category.toJson());
@@ -79,6 +82,27 @@ class FirebaseService {
   Future<void> updateCart(CartModel cart) async {
     try {
       await productCollection.doc(cart.id).update(cart.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> addOrder(OrderModel order) async {
+    try {
+      await orderCollection.add(order.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<OrderModel>> getAllOrder() async {
+    try {
+      final response = await orderCollection.get();
+      return response.docs
+          .map(
+            (e) => OrderModel.fromJson(e.data() as Map<String, dynamic>, e.id),
+          )
+          .toList();
     } catch (e) {
       throw Exception(e.toString());
     }
