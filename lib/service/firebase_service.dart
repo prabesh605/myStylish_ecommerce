@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stylish_ecommerce/models/cart_model.dart';
 import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/models/order_model.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
+import 'package:stylish_ecommerce/models/user_model.dart';
 
 class FirebaseService {
   final CollectionReference categoryCollection = FirebaseFirestore.instance
@@ -13,6 +15,10 @@ class FirebaseService {
       .collection('carts');
   final CollectionReference orderCollection = FirebaseFirestore.instance
       .collection('orders');
+  final CollectionReference userCollection = FirebaseFirestore.instance
+      .collection("users");
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
   Future<void> addCategory(CategoryModel category) async {
     try {
       await categoryCollection.add(category.toJson());
@@ -103,6 +109,59 @@ class FirebaseService {
             (e) => OrderModel.fromJson(e.data() as Map<String, dynamic>, e.id),
           )
           .toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<User?> createUserWithEmailPassword(UserModel user) async {
+    try {
+      final response = await auth.createUserWithEmailAndPassword(
+        email: user.email,
+        password: user.password,
+      );
+      User? userData = response.user;
+      return userData;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<User?> loginUserWithEmailPassword(UserModel user) async {
+    try {
+      final response = await auth.signInWithEmailAndPassword(
+        email: user.email,
+        password: user.password,
+      );
+      User? userData = response.user;
+      return userData;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> addUser(UserModel userDetail) async {
+    try {
+      final User? user = auth.currentUser;
+      await userCollection.doc(user?.uid).set(userDetail.toJson());
+      // await userCollection.add();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<ProductModel> getUserDetail() async {
+    final User? user = auth.currentUser;
+    final response = await userCollection.doc(user?.uid).get();
+
+    return ProductModel.fromJson(
+      response.data() as Map<String, dynamic>,
+      response.id,
+    );
+  }
+
+  Future<void> updateUser(UserModel user) async {
+    try {
+      await userCollection.doc(user.id).update(user.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
 import 'package:stylish_ecommerce/bloc/cart/cart_bloc.dart';
 import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
 import 'package:stylish_ecommerce/bloc/orders/order_bloc.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ProductBloc(FirebaseService())),
         BlocProvider(create: (_) => CartBloc(FirebaseService())),
         BlocProvider(create: (_) => OrderBloc(FirebaseService())),
+        BlocProvider(create: (_) => AuthBloc(FirebaseService())),
       ],
       child: MaterialApp(
         title: 'Stylish Ecommerce App',
