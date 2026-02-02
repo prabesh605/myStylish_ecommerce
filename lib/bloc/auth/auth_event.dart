@@ -11,3 +11,5 @@ class SignUp extends AuthEvent {
   final UserModel user;
   SignUp(this.user);
 }
+
+class Logout extends AuthEvent {}

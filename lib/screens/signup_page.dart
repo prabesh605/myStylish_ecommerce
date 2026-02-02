@@ -144,6 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         password: _confirmPasswordController.text,
                       );
                       context.read<AuthBloc>().add(SignUp(user));
+                    
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

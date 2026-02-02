@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(AuthSuccess());
       } else {
-        emit(AuthError());
+        emit(AuthError("User is Null"));
       }
     });
     on<SignUp>((event, emit) async {
@@ -22,8 +22,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await service.addUser(event.user);
         emit(AuthSuccess());
       } else {
-        emit(AuthError());
+        emit(AuthError("User is Null"));
       }
+    });
+    on<Logout>((event, emit) async {
+      emit(AuthLoading());
+      await service.userLogout();
+      emit(AuthSuccess());
     });
   }
 }

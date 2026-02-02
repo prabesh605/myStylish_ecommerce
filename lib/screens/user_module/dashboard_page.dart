@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_event.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_state.dart';
 import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
 import 'package:stylish_ecommerce/bloc/category/category_event.dart';
 import 'package:stylish_ecommerce/bloc/category/category_state.dart';
@@ -56,20 +59,27 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
 
       drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(child: Container()),
-            ListTile(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-            ),
-          ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccess) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            }
+          },
+          child: Column(
+            children: [
+              DrawerHeader(child: Container()),
+              ListTile(
+                onTap: () {
+                  context.read<AuthBloc>().add(Logout());
+                },
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+              ),
+            ],
+          ),
         ),
       ),
       body: SingleChildScrollView(

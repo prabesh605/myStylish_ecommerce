@@ -10,3 +10,10 @@ class AddCart extends CartEvent {
 }
 
 class UpdateCart extends CartEvent {}
+
+class DeleteAllMyCart extends CartEvent {}
+
+class DeleteParticularCart extends CartEvent {
+  final CartModel cart;
+  DeleteParticularCart(this.cart);
+}

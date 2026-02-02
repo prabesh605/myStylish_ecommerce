@@ -8,13 +8,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc(this.service) : super(CartInitial()) {
     on<GetCart>((event, emit) async {
       emit(CartLoading());
-      final carts = await service.getAllCart();
+      final carts = await service.getAllMyCart();
       emit(CartLoaded(carts));
     });
     on<AddCart>((event, emit) async {
       emit(CartLoading());
-      await service.addCart(event.cart);
-      final carts = await service.getAllCart();
+      await service.addMyCart(event.cart);
+      final carts = await service.getAllMyCart();
+      emit(CartLoaded(carts));
+    });
+    on<DeleteAllMyCart>((event, emit) async {
+      emit(CartLoading());
+      await service.clearAllMyCarts();
+      final carts = await service.getAllMyCart();
+      emit(CartLoaded(carts));
+    });
+    on<DeleteParticularCart>((event, emit) async {
+      emit(CartLoading());
+      await service.clearMyCart(event.cart);
+      final carts = await service.getAllMyCart();
       emit(CartLoaded(carts));
     });
   }

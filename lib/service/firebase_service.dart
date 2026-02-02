@@ -69,21 +69,79 @@ class FirebaseService {
     }
   }
 
-  //for cart
-  Future<void> addCart(CartModel cart) async {
+  //--------------------------cart ----------------
+
+  Future<void> addMyCart(CartModel cart) async {
     try {
-      await cartCollection.add(cart.toJson());
+      final User? user = auth.currentUser;
+      await userCollection.doc(user!.uid).collection("cart").add(cart.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<List<CartModel>> getAllCart() async {
-    final response = await cartCollection.get();
-    return response.docs
-        .map((e) => CartModel.fromJson(e.data() as Map<String, dynamic>, e.id))
-        .toList();
+  Future<List<CartModel>> getAllMyCart() async {
+    try {
+      final User? user = auth.currentUser;
+
+      final response = await userCollection
+          .doc(user!.uid)
+          .collection("cart")
+          .get();
+      return response.docs
+          .map((e) => CartModel.fromJson(e.data(), e.id))
+          .toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
+
+  Future<void> clearAllMyCarts() async {
+    try {
+      final User? user = auth.currentUser;
+      final response = await userCollection
+          .doc(user!.uid)
+          .collection("cart")
+          .get();
+
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (DocumentSnapshot doc in response.docs) {
+        batch.delete(doc.reference);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> clearMyCart(CartModel cart) async {
+    try {
+      final User? user = auth.currentUser;
+      await userCollection
+          .doc(user!.uid)
+          .collection("cart")
+          .doc(cart.id)
+          .delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  //for cart
+  // Future<void> addCart(CartModel cart) async {
+  //   try {
+  //     await cartCollection.add(cart.toJson());
+  //   } catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  // }
+
+  // Future<List<CartModel>> getAllCart() async {
+  //   final response = await cartCollection.get();
+  //   return response.docs
+  //       .map((e) => CartModel.fromJson(e.data() as Map<String, dynamic>, e.id))
+  //       .toList();
+  // }
 
   Future<void> updateCart(CartModel cart) async {
     try {
@@ -92,6 +150,20 @@ class FirebaseService {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> deleteCart(CartModel cart) async {
+    try {
+      await cartCollection.doc(cart.id).delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  // Future<void> deleteAllMyCart(List<CartModel> carts) async {
+  //   try {} catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  // }
 
   Future<void> addOrder(OrderModel order) async {
     try {
@@ -126,6 +198,7 @@ class FirebaseService {
       throw Exception(e.toString());
     }
   }
+
   Future<User?> loginUserWithEmailPassword(UserModel user) async {
     try {
       final response = await auth.signInWithEmailAndPassword(
@@ -134,6 +207,14 @@ class FirebaseService {
       );
       User? userData = response.user;
       return userData;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> userLogout() async {
+    try {
+      await auth.signOut();
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -162,6 +243,15 @@ class FirebaseService {
   Future<void> updateUser(UserModel user) async {
     try {
       await userCollection.doc(user.id).update(user.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<User?> currentUser() async {
+    try {
+      final User? user = auth.currentUser;
+      return user;
     } catch (e) {
       throw Exception(e.toString());
     }

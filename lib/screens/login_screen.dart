@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_event.dart';
+import 'package:stylish_ecommerce/bloc/auth/auth_state.dart';
+import 'package:stylish_ecommerce/models/user_model.dart';
 import 'package:stylish_ecommerce/screens/signup_page.dart';
-import 'package:stylish_ecommerce/screens/user_module/dashboard_page.dart';
 import 'package:stylish_ecommerce/screens/user_module/user_navigationbar.dart';
+import 'package:stylish_ecommerce/service/firebase_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,132 +19,184 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  FirebaseService service = FirebaseService();
+
+  Future<void> checkUserStatus() async {
+    final user = await service.currentUser();
+    if (user != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserNavigationbar()),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkUserStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Text(
-                  "Welcome\nBack!",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 30),
-                inputTextFormField(
-                  emailController,
-                  'Username or email',
-                  Icons.person,
-                ),
-                SizedBox(height: 30),
-                inputTextFormField(
-                  passwordController,
-                  'Password',
-                  Icons.lock,
-                  suffixIcon: Icons.remove_red_eye,
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: GestureDetector(
+          child: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthSuccess) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserNavigationbar()),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Text("Login Success"),
+                  ),
+                );
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(state.error),
+                  ),
+                );
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15),
+                  Text(
+                    "Welcome\nBack!",
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 30),
+                  inputTextFormField(
+                    emailController,
+                    'Username or email',
+                    Icons.person,
+                  ),
+                  SizedBox(height: 30),
+                  inputTextFormField(
+                    passwordController,
+                    'Password',
+                    Icons.lock,
+                    suffixIcon: Icons.remove_red_eye,
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: GestureDetector(
+                      child: Text(
+                        "Forget password?",
+                        style: TextStyle(color: Color(0xffF83758)),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffF83758),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      onPressed: () {
+                        final user = UserModel(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                        context.read<AuthBloc>().add(Login(user));
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => UserNavigationbar(),
+                        //     // AdminDashboardScreen(),
+                        //     // DashboardPage(),
+                        //   ),
+                        // );
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  SizedBox(
+                    width: double.infinity,
                     child: Text(
-                      "Forget password?",
-                      style: TextStyle(color: Color(0xffF83758)),
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffF83758),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserNavigationbar(),
-                          // AdminDashboardScreen(),
-                          // DashboardPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Login", style: TextStyle(color: Colors.white)),
-                  ),
-                ),
-                SizedBox(height: 50),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    "-OR Continue with-",
-                    style: TextStyle(fontSize: 12),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SigninIconButton(
-                      iconWidget: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    SigninIconButton(
-                      iconWidget: Icon(Icons.apple),
-                      foregroundColor: Colors.black,
-                    ),
-                    SizedBox(width: 10),
-                    SigninIconButton(
-                      iconWidget: Icon(Icons.facebook),
-                      foregroundColor: Color(0xff3D4DA6),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
-                      );
-                    },
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(text: 'Create an account. '),
-                          TextSpan(
-                            text: 'Signup',
-                            style: TextStyle(
-                              color: Color(0xffF83758),
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
+                      "-OR Continue with-",
+                      style: TextStyle(fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SigninIconButton(
+                        iconWidget: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset(
+                            'assets/icons/google_icon.png',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      SigninIconButton(
+                        iconWidget: Icon(Icons.apple),
+                        foregroundColor: Colors.black,
+                      ),
+                      SizedBox(width: 10),
+                      SigninIconButton(
+                        iconWidget: Icon(Icons.facebook),
+                        foregroundColor: Color(0xff3D4DA6),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignupScreen(),
+                          ),
+                        );
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: 'Create an account. '),
+                            TextSpan(
+                              text: 'Signup',
+                              style: TextStyle(
+                                color: Color(0xffF83758),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

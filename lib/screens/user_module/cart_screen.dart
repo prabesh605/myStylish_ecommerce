@@ -112,7 +112,25 @@ class _CartScreenState extends State<CartScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(height: 10),
-                                          Text(cart.name),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(cart.name),
+
+                                              IconButton(
+                                                onPressed: () {
+                                                  context.read<CartBloc>().add(
+                                                    DeleteParticularCart(cart),
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                           SizedBox(height: 10),
                                           Row(
                                             children: [
@@ -227,6 +245,7 @@ class _CartScreenState extends State<CartScreen> {
                       print(orderData);
                       if (orderData != null) {
                         context.read<OrderBloc>().add(AddOrder(orderData!));
+                        context.read<CartBloc>().add(DeleteAllMyCart());
                         Navigator.push(
                           context,
                           (MaterialPageRoute(
