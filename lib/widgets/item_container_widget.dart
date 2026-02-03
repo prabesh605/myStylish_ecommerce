@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:stylish_ecommerce/bloc/wishlist/wishlist_bloc.dart';
+import 'package:stylish_ecommerce/bloc/wishlist/wishlist_event.dart';
+import 'package:stylish_ecommerce/models/wishlist_model.dart';
 
 class ItemContainerWidget extends StatelessWidget {
   const ItemContainerWidget({
@@ -39,14 +43,40 @@ class ItemContainerWidget extends StatelessWidget {
             // mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadiusGeometry.circular(12),
-                child: Image.network(
-                  imageUrl,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(12),
+                    child: Image.network(
+                      imageUrl,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: IconButton(
+                      onPressed: () {
+                        final wishlist = WishlistModel(
+                          imageUrl: imageUrl,
+                          name: name,
+                          description: description,
+                          categoryId: "",
+                          categoryName: "",
+                          price: price,
+                          initialPrice: initialPrice,
+                          rating: rating,
+                        );
+                        context.read<WishlistBloc>().add(
+                          AddToWishList(wishlist),
+                        );
+                      },
+                      icon: Icon(Icons.favorite_border, color: Colors.red),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 10),
               Padding(
@@ -73,7 +103,7 @@ class ItemContainerWidget extends StatelessWidget {
                     SizedBox(height: 10),
                     RichText(
                       selectionColor: Colors.black,
-        
+
                       text: TextSpan(
                         text: "Rs. $initialPrice",
                         style: TextStyle(
@@ -96,7 +126,7 @@ class ItemContainerWidget extends StatelessWidget {
                     RatingBar.builder(
                       itemSize: 20,
                       initialRating: rating,
-        
+
                       itemBuilder: (context, _) =>
                           Icon(Icons.star, color: Colors.amber),
                       onRatingUpdate: (rating) {

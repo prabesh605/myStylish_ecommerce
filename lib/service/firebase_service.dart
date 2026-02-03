@@ -5,6 +5,7 @@ import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/models/order_model.dart';
 import 'package:stylish_ecommerce/models/product_model.dart';
 import 'package:stylish_ecommerce/models/user_model.dart';
+import 'package:stylish_ecommerce/models/wishlist_model.dart';
 
 class FirebaseService {
   final CollectionReference categoryCollection = FirebaseFirestore.instance
@@ -109,6 +110,7 @@ class FirebaseService {
       for (DocumentSnapshot doc in response.docs) {
         batch.delete(doc.reference);
       }
+      await batch.commit();
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -122,6 +124,49 @@ class FirebaseService {
           .collection("cart")
           .doc(cart.id)
           .delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  ///-------------------wishlist-----------
+
+  Future<void> addWishList(WishlistModel wishlist) async {
+    try {
+      final User? user = auth.currentUser;
+      await userCollection
+          .doc(user!.uid)
+          .collection("wishlist")
+          .add(wishlist.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> removeWishlist(WishlistModel wishlist) async {
+    try {
+      final User? user = auth.currentUser;
+      await userCollection
+          .doc(user!.uid)
+          .collection("wishlist")
+          .doc(wishlist.id)
+          .delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<WishlistModel>> getMyWishtlist() async {
+    try {
+      final User? user = auth.currentUser;
+
+      final response = await userCollection
+          .doc(user!.uid)
+          .collection("wishlist")
+          .get();
+      return response.docs
+          .map((e) => WishlistModel.fromJson(e.data(), e.id))
+          .toList();
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -224,6 +269,21 @@ class FirebaseService {
     try {
       final User? user = auth.currentUser;
       await userCollection.doc(user?.uid).set(userDetail.toJson());
+      // await userCollection.add();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<UserModel> getUser() async {
+    try {
+      final User? user = auth.currentUser;
+      final response = await userCollection.doc(user!.uid).get();
+      return UserModel.fromJson(
+        response.data() as Map<String, dynamic>,
+        response.id,
+      );
+      // await userCollection.doc(user?.uid).set(userDetail.toJson());
       // await userCollection.add();
     } catch (e) {
       throw Exception(e.toString());

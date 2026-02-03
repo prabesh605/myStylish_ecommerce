@@ -9,6 +9,8 @@ import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
 import 'package:stylish_ecommerce/bloc/orders/order_bloc.dart';
 import 'package:stylish_ecommerce/bloc/product/product_bloc.dart';
 import 'package:stylish_ecommerce/bloc/uploadImage/upload_bloc.dart';
+import 'package:stylish_ecommerce/bloc/user/user_bloc.dart';
+import 'package:stylish_ecommerce/bloc/wishlist/wishlist_bloc.dart';
 // import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 // import 'package:stylish_ecommerce/dashboard_page.dart';
 import 'package:stylish_ecommerce/firebase_options.dart';
@@ -50,6 +52,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CartBloc(FirebaseService())),
         BlocProvider(create: (_) => OrderBloc(FirebaseService())),
         BlocProvider(create: (_) => AuthBloc(FirebaseService())),
+        BlocProvider(create: (_) => WishlistBloc(FirebaseService())),
+        BlocProvider(create: (_) => UserBloc(FirebaseService())),
       ],
       child: MaterialApp(
         title: 'Stylish Ecommerce App',
