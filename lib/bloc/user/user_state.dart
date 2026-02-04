@@ -12,3 +12,5 @@ class UserLoaded extends UserState {
 }
 
 class UserError extends UserState {}
+
+class UserSuccess extends UserState {}

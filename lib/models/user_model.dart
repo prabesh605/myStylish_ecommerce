@@ -9,6 +9,8 @@ class UserModel {
   String? country;
   String? accountName;
   String? bankName;
+  int? bankNumber;
+  String role;
   UserModel({
     this.id,
     required this.email,
@@ -20,6 +22,8 @@ class UserModel {
     this.country,
     this.accountName,
     this.bankName,
+    this.bankNumber,
+    required this.role,
   });
   factory UserModel.fromJson(Map<String, dynamic> json, String id) {
     return UserModel(
@@ -33,6 +37,8 @@ class UserModel {
       country: json['country'] ?? "",
       accountName: json['accountName'] ?? "",
       bankName: json['bankName'] ?? "",
+      bankNumber: json['bankNumber'] ?? 0,
+      role: json['role'],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -46,5 +52,7 @@ class UserModel {
     "country": country,
     "accountName": accountName,
     "bankName": bankName,
+    "bankNumber": bankNumber,
+    "role": role,
   };
 }

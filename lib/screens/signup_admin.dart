@@ -6,18 +6,19 @@ import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_event.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_state.dart';
 import 'package:stylish_ecommerce/models/user_model.dart';
+import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';
 import 'package:stylish_ecommerce/screens/user_module/user_navigationbar.dart';
 import 'package:stylish_ecommerce/service/firebase_service.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignupAdminScreen extends StatefulWidget {
+  const SignupAdminScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignupAdminScreen> createState() => _SignupAdminScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupAdminScreenState extends State<SignupAdminScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -27,13 +28,14 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.black12,
       body: SingleChildScrollView(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UserNavigationbar()),
+                MaterialPageRoute(builder: (context) => AdminDashboardScreen()),
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -52,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Create an \nAccount',
+                      'Create an admin \nAccount',
                       style: TextStyle(
                         fontSize: 33,
                         fontWeight: FontWeight.bold,
@@ -140,7 +142,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     if (_passwordController.text ==
                         _confirmPasswordController.text) {
                       final user = UserModel(
-                        role: "user",
+                        role: "admin",
                         email: _emailController.text,
                         password: _confirmPasswordController.text,
                       );

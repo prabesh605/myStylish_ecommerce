@@ -14,8 +14,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUser>((event, emit) async {
       emit(UserLoading());
       await service.updateUser(event.user);
+      // emit(UserSuccess());
       final user = await service.getUser();
       emit(UserLoaded(user));
+    });
+    on<ChangePassword>((event, emit) async {
+      emit(UserLoading());
+      await service.changePassword(event.currentPassword, event.newPassword);
+      emit(UserSuccess());
+      // final user = await service.getUser();
+      // emit(UserLoaded(user));
     });
   }
 }

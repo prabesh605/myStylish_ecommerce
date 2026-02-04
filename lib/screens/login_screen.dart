@@ -4,6 +4,8 @@ import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_event.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_state.dart';
 import 'package:stylish_ecommerce/models/user_model.dart';
+import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
+import 'package:stylish_ecommerce/screens/signup_admin.dart';
 import 'package:stylish_ecommerce/screens/signup_page.dart';
 import 'package:stylish_ecommerce/screens/user_module/user_navigationbar.dart';
 import 'package:stylish_ecommerce/service/firebase_service.dart';
@@ -24,10 +26,18 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> checkUserStatus() async {
     final user = await service.currentUser();
     if (user != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => UserNavigationbar()),
-      );
+      final UserModel usermodel = await service.getUser();
+      if (usermodel.role == 'user') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserNavigationbar()),
+        );
+      } else if (usermodel.role == 'admin') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdminDashboardScreen()),
+        );
+      }
     }
   }
 
@@ -45,10 +55,23 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserNavigationbar()),
-                );
+                final role = state.role;
+                if (role == 'admin') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdminDashboardScreen(),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserNavigationbar(),
+                    ),
+                  );
+                }
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green,
@@ -111,6 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         final user = UserModel(
+                          role: "",
                           email: emailController.text,
                           password: passwordController.text,
                         );
@@ -186,6 +210,34 @@ class _LoginScreenState extends State<LoginScreen> {
                               text: 'Signup',
                               style: TextStyle(
                                 color: Color(0xffF83758),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignupAdminScreen(),
+                          ),
+                        );
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: 'Become Seller. '),
+                            TextSpan(
+                              text: 'Signup',
+                              style: TextStyle(
+                                color: Colors.brown,
                                 decoration: TextDecoration.underline,
                               ),
                             ),

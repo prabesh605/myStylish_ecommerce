@@ -10,7 +10,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       final user = await service.loginUserWithEmailPassword(event.user);
       if (user != null) {
-        emit(AuthSuccess());
+        final userData = await service.getUser();
+        if (userData != null) {
+          emit(AuthSuccess(userData.role));
+        }
       } else {
         emit(AuthError("User is Null"));
       }
@@ -20,7 +23,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await service.createUserWithEmailPassword(event.user);
       if (user != null) {
         await service.addUser(event.user);
-        emit(AuthSuccess());
+
+        emit(AuthSuccess(""));
       } else {
         emit(AuthError("User is Null"));
       }
@@ -28,7 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<Logout>((event, emit) async {
       emit(AuthLoading());
       await service.userLogout();
-      emit(AuthSuccess());
+      emit(AuthSuccess(""));
     });
   }
 }

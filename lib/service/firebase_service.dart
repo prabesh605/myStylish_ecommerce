@@ -300,9 +300,10 @@ class FirebaseService {
     );
   }
 
-  Future<void> updateUser(UserModel user) async {
+  Future<void> updateUser(UserModel userData) async {
     try {
-      await userCollection.doc(user.id).update(user.toJson());
+      final User? user = auth.currentUser;
+      await userCollection.doc(user!.uid).update(userData.toJson());
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -312,6 +313,25 @@ class FirebaseService {
     try {
       final User? user = auth.currentUser;
       return user;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    try {
+      final User? user = auth.currentUser;
+      if (user != null) {
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email ?? "",
+          password: currentPassword,
+        );
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
+      }
     } catch (e) {
       throw Exception(e.toString());
     }

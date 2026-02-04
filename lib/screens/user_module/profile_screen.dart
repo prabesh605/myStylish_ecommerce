@@ -28,7 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController countryController = TextEditingController();
   TextEditingController bankHolderController = TextEditingController();
   TextEditingController bankAccountController = TextEditingController();
-
+  TextEditingController bankNumberController = TextEditingController();
+  UserModel? userModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +37,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: BlocBuilder<UserBloc, UserState>(
+          child: BlocConsumer<UserBloc, UserState>(
+            listener: (BuildContext context, UserState state) {
+              if (state is UserSuccess) {
+                if (userModel != null) {
+                  context.read<UserBloc>().add(UpdateUser(userModel!));
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text("Password Change successfully"),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text("Something went wrong"),
+                    ),
+                  );
+                }
+              }
+            },
             builder: (context, state) {
               if (state is UserLoading) {
                 return Center(child: CircularProgressIndicator());
@@ -53,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 countryController.text = user.country ?? "";
                 bankHolderController.text = user.accountName ?? "";
                 bankAccountController.text = user.bankName ?? "";
+                bankNumberController.text = "${user.bankNumber ?? 0}";
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,7 +115,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text("Change Password"),
+                      child: GestureDetector(
+                        onTap: () {
+                          userModel = UserModel(
+                            id: user.id,
+                            email: user.email,
+                            password: passwordController.text,
+                            pincode: user.pincode,
+                            address: user.address,
+                            city: user.city,
+                            state: user.state,
+                            country: user.country,
+                            accountName: user.accountName,
+                            bankName: user.bankName,
+                            bankNumber: user.bankNumber,
+                            role: user.role,
+                          );
+                          context.read<UserBloc>().add(
+                            ChangePassword(
+                              user.password,
+                              passwordController.text,
+                            ),
+                          );
+                        },
+                        child: Text("Change Password"),
+                      ),
                     ),
                     SizedBox(height: 20),
                     Divider(),
@@ -135,12 +182,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     CustomFormFieldWidget(
+                      title: "Bank Name",
+                      controller: bankAccountController,
+                    ),
+                    CustomFormFieldWidget(
                       title: "Account Holder's Name",
                       controller: bankHolderController,
                     ),
                     CustomFormFieldWidget(
                       title: "Bank Account Number",
-                      controller: bankAccountController,
+                      controller: bankNumberController,
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -153,6 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onPressed: () {
                         final updateUser = UserModel(
+                          id: user.id,
+                          role: user.role,
                           email: emailController.text,
                           password: passwordController.text,
                           pincode: int.tryParse(pincodeController.text),
@@ -162,8 +215,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           country: countryController.text,
                           accountName: bankHolderController.text,
                           bankName: bankAccountController.text,
+                          bankNumber: int.tryParse(bankNumberController.text),
                         );
                         context.read<UserBloc>().add(UpdateUser(updateUser));
+                        Navigator.pop(context);
                       },
                       child: Text(
                         "Save",
@@ -201,6 +256,7 @@ class CustomFormFieldWidget extends StatelessWidget {
         SizedBox(height: 20),
         TextFormField(
           controller: controller,
+          // keyboardType: keyboardType,
           decoration: InputDecoration(border: OutlineInputBorder()),
         ),
       ],

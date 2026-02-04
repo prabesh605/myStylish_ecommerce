@@ -4,7 +4,10 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {}
+class AuthSuccess extends AuthState {
+  final String role;
+  AuthSuccess(this.role);
+}
 
 class AuthError extends AuthState {
   final String error;

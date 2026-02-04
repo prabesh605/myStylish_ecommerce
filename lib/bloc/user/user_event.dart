@@ -8,3 +8,9 @@ class UpdateUser extends UserEvent {
   final UserModel user;
   UpdateUser(this.user);
 }
+
+class ChangePassword extends UserEvent {
+  final String currentPassword;
+  final String newPassword;
+  ChangePassword(this.currentPassword, this.newPassword);
+}
