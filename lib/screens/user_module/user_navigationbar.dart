@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/screens/user_module/cart_screen.dart';
 import 'package:stylish_ecommerce/screens/user_module/dashboard_page.dart';
+import 'package:stylish_ecommerce/screens/user_module/product_list_screen.dart';
+import 'package:stylish_ecommerce/screens/user_module/setting_screen.dart';
 import 'package:stylish_ecommerce/screens/user_module/wishlist_screen.dart';
 
 class UserNavigationbar extends StatefulWidget {
@@ -17,8 +19,8 @@ class _UserNavigationbarState extends State<UserNavigationbar> {
     DashboardPage(),
     WishlistScreen(),
     CartScreen(),
-    Center(child: Text("Search Screen")),
-    Center(child: Text("Settings")),
+    ProductListScreen(),
+    SettingScreen(),
   ];
 
   @override

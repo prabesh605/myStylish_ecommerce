@@ -20,6 +20,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     context.read<ProductBloc>().add(GetProduct());
   }
 
+  String searchItem = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +35,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  searchItem = value;
+                });
+              },
             ),
             SizedBox(height: 20),
             BlocBuilder<ProductBloc, ProductState>(
@@ -43,9 +49,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 } else if (state is ProductError) {
                   return Center(child: Text("Error"));
                 } else if (state is ProductLoaded) {
+                  final filterProduct = (searchItem == '' && searchItem.isEmpty)
+                      ? state.products
+                      : state.products.where((product) {
+                          return product.name.toLowerCase().contains(
+                            searchItem.toLowerCase(),
+                          );
+                        }).toList();
                   return Expanded(
                     child: GridView.builder(
-                      itemCount: state.products.length,
+                      itemCount: filterProduct.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
@@ -54,7 +67,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             childAspectRatio: 0.5,
                           ),
                       itemBuilder: (context, index) {
-                        final product = state.products[index];
+                        final product = filterProduct[index];
                         return ItemContainerWidget(
                           onTap: () {
                             Navigator.push(

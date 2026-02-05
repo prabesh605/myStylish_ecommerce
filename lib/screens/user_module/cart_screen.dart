@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -23,6 +24,16 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     super.initState();
     context.read<CartBloc>().add(GetCart());
+  }
+
+  String userId = '';
+  String userName = '';
+  void getUserID() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userId = user?.uid ?? "";
+      userName = user?.email ?? "";
+    });
   }
 
   double total = 0;
@@ -70,8 +81,8 @@ class _CartScreenState extends State<CartScreen> {
                         );
                         print(total);
                         orderData = OrderModel(
-                          userId: "iijksdk",
-                          userName: "Prabesh",
+                          userId: userId,
+                          userName: userName,
                           items: carts.length,
                           total: total,
                           carts: carts,

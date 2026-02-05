@@ -26,7 +26,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("My WishList")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("My WishList"),
+      ),
       body: Column(
         children: [
           BlocBuilder<WishlistBloc, WishlistState>(

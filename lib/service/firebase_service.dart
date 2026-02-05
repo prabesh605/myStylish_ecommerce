@@ -231,6 +231,20 @@ class FirebaseService {
     }
   }
 
+  Future<List<OrderModel>> getMyOrder(String usersID) async {
+    try {
+      final response = await orderCollection.get();
+      final allData = response.docs
+          .map(
+            (e) => OrderModel.fromJson(e.data() as Map<String, dynamic>, e.id),
+          )
+          .toList();
+      return allData.where((data) => data.userId == usersID).toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<User?> createUserWithEmailPassword(UserModel user) async {
     try {
       final response = await auth.createUserWithEmailAndPassword(
