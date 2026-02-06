@@ -8,6 +8,7 @@ import 'package:stylish_ecommerce/bloc/cart/cart_state.dart';
 import 'package:stylish_ecommerce/bloc/orders/order_bloc.dart';
 import 'package:stylish_ecommerce/bloc/orders/order_event.dart';
 import 'package:stylish_ecommerce/bloc/orders/order_state.dart';
+import 'package:stylish_ecommerce/constant/order_status.dart';
 import 'package:stylish_ecommerce/models/order_model.dart';
 import 'package:stylish_ecommerce/screens/user_module/user_navigationbar.dart';
 // import 'package:stylish_ecommerce/constant/Strings.dart';
@@ -86,6 +87,7 @@ class _CartScreenState extends State<CartScreen> {
                           items: carts.length,
                           total: total,
                           carts: carts,
+                          status: OrderStatus.pending,
                         );
 
                         return Expanded(

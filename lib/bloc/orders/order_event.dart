@@ -8,3 +8,5 @@ class AddOrder extends OrderEvent {
 }
 
 class GetOrder extends OrderEvent {}
+
+class GetMyOrder extends OrderEvent {}

@@ -231,15 +231,16 @@ class FirebaseService {
     }
   }
 
-  Future<List<OrderModel>> getMyOrder(String usersID) async {
+  Future<List<OrderModel>> getMyOrder() async {
     try {
+      final User? user = auth.currentUser;
       final response = await orderCollection.get();
       final allData = response.docs
           .map(
             (e) => OrderModel.fromJson(e.data() as Map<String, dynamic>, e.id),
           )
           .toList();
-      return allData.where((data) => data.userId == usersID).toList();
+      return allData.where((data) => data.userId == user!.uid).toList();
     } catch (e) {
       throw Exception(e.toString());
     }

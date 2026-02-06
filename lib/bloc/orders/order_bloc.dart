@@ -17,5 +17,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final orders = await service.getAllOrder();
       emit(OrderLoaded(orders));
     });
+    on<GetMyOrder>((event, emit) async {
+      emit(OrderLoading());
+      final orders = await service.getMyOrder();
+      emit(OrderLoaded(orders));
+    });
   }
 }
