@@ -23,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // for navigate or not in OnboardingScreen
-
+  
   //for transparent StatusBar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

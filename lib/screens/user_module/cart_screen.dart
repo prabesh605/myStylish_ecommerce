@@ -25,6 +25,7 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     super.initState();
     context.read<CartBloc>().add(GetCart());
+    getUserID();
   }
 
   String userId = '';

@@ -10,3 +10,8 @@ class AddOrder extends OrderEvent {
 class GetOrder extends OrderEvent {}
 
 class GetMyOrder extends OrderEvent {}
+
+class UpdateOrder extends OrderEvent {
+  final OrderModel order;
+  UpdateOrder(this.order);
+}

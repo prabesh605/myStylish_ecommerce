@@ -50,6 +50,7 @@ class _AdminOrderPageState extends State<AdminOrderPage> {
                             );
                           },
                           child: Container(
+                            margin: EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.green),
                               borderRadius: BorderRadius.circular(12),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:stylish_ecommerce/bloc/orders/order_bloc.dart';
+import 'package:stylish_ecommerce/bloc/orders/order_event.dart';
+import 'package:stylish_ecommerce/constant/order_status.dart';
 
 import 'package:stylish_ecommerce/models/order_model.dart';
 
@@ -12,6 +16,21 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
+  getNextOrderStatus(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return OrderStatus.processing;
+      case OrderStatus.processing:
+        return OrderStatus.shipped;
+      case OrderStatus.shipped:
+        return OrderStatus.completed;
+      case OrderStatus.completed:
+        return OrderStatus.completed;
+      case OrderStatus.cancelled:
+        return OrderStatus.cancelled;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +49,110 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          OrderStatus nextorder = getNextOrderStatus(
+                            widget.order.status,
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Change Order Status"),
+                                content: Text(
+                                  "Do you want to Change the Status ${widget.order.status.name} to ${nextorder.name}",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      final order = OrderModel(
+                                        id: widget.order.id,
+                                        userId: widget.order.userId,
+                                        userName: widget.order.userName,
+                                        items: widget.order.items,
+                                        total: widget.order.total,
+                                        carts: widget.order.carts,
+                                        status: getNextOrderStatus(
+                                          widget.order.status,
+                                        ),
+                                      );
+                                      print(order);
+                                      context.read<OrderBloc>().add(
+                                        UpdateOrder(order),
+                                      );
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Yes"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(widget.order.status.name),
+                        ),
+                      ),
+                      //cancel
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Cancel Order"),
+                                content: Text("Do you want to Cancel Order"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      final order = OrderModel(
+                                        id: widget.order.id,
+                                        userId: widget.order.userId,
+                                        userName: widget.order.userName,
+                                        items: widget.order.items,
+                                        total: widget.order.total,
+                                        carts: widget.order.carts,
+                                        status: OrderStatus.cancelled,
+                                      );
+                                      print(order);
+                                      context.read<OrderBloc>().add(
+                                        UpdateOrder(order),
+                                      );
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Yes"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text("User Name: ${widget.order.userName}"),
                   Text("User ID: ${widget.order.userId}"),
                   Text("Total Items: ${widget.order.items}"),

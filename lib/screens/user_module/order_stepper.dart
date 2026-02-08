@@ -37,10 +37,26 @@ class _OrderStepperState extends State<OrderStepper> {
               controlsBuilder: (context, index) =>
                   SizedBox(child: Text("----")),
               steps: [
-                Step(title: Text("Pending"), content: SizedBox()),
-                Step(title: Text("Processing"), content: SizedBox()),
-                Step(title: Text("Shipped"), content: SizedBox()),
-                Step(title: Text("Completed"), content: SizedBox()),
+                Step(
+                  isActive: getStepIndex(widget.order.status) >= 0,
+                  title: Text("Pending"),
+                  content: SizedBox(),
+                ),
+                Step(
+                  isActive: getStepIndex(widget.order.status) >= 1,
+                  title: Text("Processing"),
+                  content: SizedBox(),
+                ),
+                Step(
+                  isActive: getStepIndex(widget.order.status) >= 2,
+                  title: Text("Shipped"),
+                  content: SizedBox(),
+                ),
+                Step(
+                  isActive: getStepIndex(widget.order.status) >= 3,
+                  title: Text("Completed"),
+                  content: SizedBox(),
+                ),
               ],
             ),
           ],

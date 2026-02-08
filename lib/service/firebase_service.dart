@@ -246,6 +246,14 @@ class FirebaseService {
     }
   }
 
+  Future<void> updateOrder(OrderModel order) async {
+    try {
+      await orderCollection.doc(order.id).update(order.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<User?> createUserWithEmailPassword(UserModel user) async {
     try {
       final response = await auth.createUserWithEmailAndPassword(
