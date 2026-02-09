@@ -4,6 +4,7 @@ import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_event.dart';
 import 'package:stylish_ecommerce/bloc/auth/auth_state.dart';
 import 'package:stylish_ecommerce/models/user_model.dart';
+import 'package:stylish_ecommerce/notification_service.dart';
 import 'package:stylish_ecommerce/screens/admin_module/admin_dashboard_screen.dart';
 import 'package:stylish_ecommerce/screens/signup_admin.dart';
 import 'package:stylish_ecommerce/screens/signup_page.dart';
@@ -20,7 +21,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   FirebaseService service = FirebaseService();
 
   Future<void> checkUserStatus() async {
@@ -246,6 +246,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      NotificationService.instance.scheduleNotification(
+                        id: 1232,
+                        title: "Hello",
+                        body: "this is local notifcation",
+                        scheduleTime: DateTime.now(),
+                      );
+                    },
+                    child: Text("Test Nofication"),
                   ),
                 ],
               ),

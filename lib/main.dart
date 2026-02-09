@@ -14,6 +14,7 @@ import 'package:stylish_ecommerce/bloc/wishlist/wishlist_bloc.dart';
 // import 'package:stylish_ecommerce/screens/user_model/dashboard_page.dart';
 // import 'package:stylish_ecommerce/dashboard_page.dart';
 import 'package:stylish_ecommerce/firebase_options.dart';
+import 'package:stylish_ecommerce/notification_service.dart';
 import 'package:stylish_ecommerce/screens/login_screen.dart';
 import 'package:stylish_ecommerce/screens/onboarding_screen.dart';
 import 'package:stylish_ecommerce/service/firebase_service.dart';
@@ -23,7 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // for navigate or not in OnboardingScreen
-  
+  NotificationService.instance.init();
   //for transparent StatusBar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
