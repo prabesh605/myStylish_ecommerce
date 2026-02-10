@@ -41,6 +41,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<DateTime?> selectDateTime(BuildContext context) async {
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (selectedDate == null) return null;
+    final TimeOfDay? selectTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (selectTime == null) return null;
+    return DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectTime.hour,
+      selectTime.minute,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -248,13 +270,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      NotificationService.instance.scheduleNotification(
-                        id: 1232,
-                        title: "Hello",
-                        body: "this is local notifcation",
-                        scheduleTime: DateTime.now(),
-                      );
+                    onPressed: () async {
+                      final scheduleDateTime = await selectDateTime(context);
+                      if (scheduleDateTime != null) {
+                        NotificationService.instance.scheduleNotification(
+                          id: 1232,
+                          title: "Hello",
+                          body: "this is local notifcation",
+                          scheduleTime: scheduleDateTime,
+                        );
+                      }
                     },
                     child: Text("Test Nofication"),
                   ),

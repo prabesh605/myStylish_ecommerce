@@ -55,9 +55,12 @@ class NotificationService {
     required String body,
     required DateTime scheduleTime,
   }) async {
-    final tzLocation = tz.getLocation('Asia/Kathmandu');
-    // tz.setLocalLocation(tz.getLocation('Asia/kathmandu'));
-    // final tzScheduled = tz.TZDateTime.from(sc, tzLocation);
+    var tzScheduled = tz.TZDateTime.from(scheduleTime, tz.local);
+
+    // final now = tz.TZDateTime.now(tz.local);
+    // if (!tzScheduled.isAfter(now)) {
+    //   tzScheduled = now.add(const Duration(seconds: 2));
+    // }
     const androidDetails = AndroidNotificationDetails(
       'default_channel',
       'Default Notification',
@@ -69,9 +72,7 @@ class NotificationService {
       id: id,
       title: title,
       body: body,
-      scheduledDate: tz.TZDateTime.now(
-        tz.local,
-      ).add(const Duration(seconds: 10)),
+      scheduledDate: tzScheduled,
       notificationDetails: details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
