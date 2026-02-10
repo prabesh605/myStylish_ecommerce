@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish_ecommerce/screens/user_module/khalti_page.dart';
 import 'package:stylish_ecommerce/screens/user_module/my_order_screen.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -27,6 +28,16 @@ class SettingScreen extends StatelessWidget {
             },
             leading: Icon(Icons.reorder),
             title: Text("My Orders"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => KhaltiPage()),
+              );
+            },
+            leading: Icon(Icons.payment),
+            title: Text("Khalti Page"),
           ),
         ],
       ),
