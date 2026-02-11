@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_ecommerce/screens/user_module/khalti_page.dart';
 import 'package:stylish_ecommerce/screens/user_module/my_order_screen.dart';
+import 'package:stylish_ecommerce/service/khalti_service.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
+
+  @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  KhaltiServicePidx khaltiService = KhaltiServicePidx();
+  String? pidx;
+  @override
+  void initState() {
+    super.initState();
+    getPidx();
+  }
+
+  Future<void> getPidx() async {
+    pidx = await khaltiService.getPidxFromKhalti();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +49,18 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => KhaltiPage()),
-              );
+              if (pidx != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => KhaltiPage(pidx: pidx!),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Error getting pidx number")),
+                );
+              }
             },
             leading: Icon(Icons.payment),
             title: Text("Khalti Page"),
