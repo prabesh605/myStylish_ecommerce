@@ -5,7 +5,7 @@ import 'package:stylish_ecommerce/models/category_model.dart';
 import 'package:stylish_ecommerce/service/firebase_service.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  FirebaseService service;
+  FirebaseService service =FirebaseService();
   CategoryBloc(this.service) : super(CategoryInitial()) {
     on<AddCategory>((event, emit) async {
       emit(CategoryLoading());
