@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stylish_ecommerce/bloc/category/category_bloc.dart';
 import 'package:stylish_ecommerce/bloc/category/category_event.dart';
 import 'package:stylish_ecommerce/bloc/category/category_state.dart';
@@ -25,6 +26,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
     super.initState();
     context.read<CategoryBloc>().add(GetCategories());
     context.read<ProductBloc>().add(GetProduct());
+  }
+
+  Future<bool> handleCameraPermission() async {
+    ///permission
+    final status = await Permission.camera.status;
+
+    if (status.isGranted) {
+      return true;
+    }
+    if (status.isDenied) {
+      final result = await Permission.camera.request();
+      return result.isGranted;
+    }
+    if (status.isPermanentlyDenied) {
+      await openAppSettings();
+      return false;
+    }
+    return false;
   }
 
   void updateAddProductBottomSheet(ProductModel? product) {
@@ -215,7 +234,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ),
                         SizedBox(width: 10),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            handleCameraPermission();
+                            // await Permission.camera.request();
                             context.read<UploadBloc>().add(UploadImage());
                           },
                           child: Text("Upload"),

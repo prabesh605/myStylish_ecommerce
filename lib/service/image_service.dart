@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:stylish_ecommerce/bloc/auth/auth_bloc.dart';
 
 class ImageService {
   final String cloudName = 'dndihenwf';
@@ -24,7 +25,7 @@ class ImageService {
     if (picked != null) {
       image = File(picked.path);
       print(image);
-      // return image;
+      return image;
     }
     return null;
   }
@@ -46,3 +47,9 @@ class ImageService {
     }
   }
 }
+
+
+//auth -main
+//service - firebase / apiservice
+//model - authmodel
+//page - 

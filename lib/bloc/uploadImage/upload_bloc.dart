@@ -11,7 +11,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     File? imageFile;
     on<UploadImage>((event, emit) async {
       emit(UploadLoading());
-      imageFile = await imageService.pickImageFromGallery();
+      imageFile = await imageService.pickImageFromCamera();
 
       if (imageFile != null) {
         final String imageURl = await imageService.uploadImage(imageFile);

@@ -48,6 +48,7 @@ dependencies:
   firebase_messaging: ^16.1.1
   flutter_timezone: ^5.0.1
   khalti_checkout_flutter: ^1.0.0-dev.9
+  permission_handler: ^12.0.1
  
 
 dev_dependencies:
